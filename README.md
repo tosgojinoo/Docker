@@ -37,12 +37,10 @@ pull
 + 컨테이너 생성
 creat
 + 이미지 실행 
-	+ ubuntu 실행시
 ```bash
+(ubuntu 실행시)
 $ docker run ubuntu:16.04
-```
-	+ tensorflow 실행시 
-```bash
+(tensorflow 실행시)
 $ docker run -d -p 8888:8888 -p 6006:6006 teamlab/pydata-tensorflow:0.1
 ```
 
