@@ -204,50 +204,52 @@ torch.cuda.get_device_name(0)
 ## 도커 명령어
 
 + 실행중인 컨테이너 목록
-$ docker ps -a
+`$ docker ps -a`
 
 + 이미지 -> 컨테이너 실행
-$ docker run
+`$ docker run`
 
 + 컨테이너 중지
-$ docker stop {container ID}
+`$ docker stop {container ID}`
 
 + 컨테이너 중지 -> 시작
-$ docker start {container ID}
+`$ docker start {container ID}`
 
 + 컨테이너 중지 -> 제거
-$ docker rm {container ID#1} {container ID#2}
+`$ docker rm {container ID#1} {container ID#2}`
 
 + 컨테이너 생성
-$ docker creat
+`$ docker creat`
 
 + 로컬에 저장된 이미지들 목록
-$ docker images
+`$ docker images`
 
 + 내 로컬에 있는 이미지를 원격 레포지토리로 보냄
-$ docker push
+`$ docker push`
 
 + 원격 레포지토리의 이미지를 로컬로 당겨옴
-$ docker pull
+`$ docker pull`
 
 + 이미지 삭제
-$ docker rmi {image ID}
+`$ docker rmi {image ID}`
 
 + 컨테이너 로그
-$ docker logs --tail 10 {container ID}
+`$ docker logs --tail 10 {container ID}`
 
 + 실시간 컨테이너 로그
-$ docker logs -f {container ID}
+`$ docker logs -f {container ID}`
 
 + 컨테이너 안에서 프로세스가 실행되고 있는 그 상태의 쉘로 접속
-$ docker attach {container ID} 
+`$ docker attach {container ID}` 
 
 + 컨테이너 안의 변경사항들을 이미지에 반영(커밋)
-$ docker commit {container ID} {image ID}:{tag}
+`$ docker commit {container ID} {image ID}:{tag}`
 
 + 실행중인 컨테이너에 명령 실행, 내부 쉘 접속 (run은 새로 컨테이너를 만들어 실행, exec는 실행 중인 컨테이너에 명령 실행)
+```
 $ docker exec [option] {container ID} command [arg ...]
 $ (예) docker exec -it mysql /bin/bash
+```
 
 + 도커 컨테이너 업데이트 : 업데이트시 컨테이너에 생성된 파일은 모두 삭제될 수 있음. 유지해야 할 데이터는 컨테이너 내부가 아닌 외부 스토리지에 저장.
 
