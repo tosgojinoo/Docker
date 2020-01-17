@@ -203,58 +203,57 @@ torch.cuda.get_device_name(0)
 
 ## 도커 명령어
 
-+ 실행중인 컨테이너 목록
-
++ 실행중인 컨테이너 목록<br>
 `$ docker ps -a`
 
-+ 이미지 -> 컨테이너 실행
++ 이미지 -> 컨테이너 실행<br>
 `$ docker run`
 
-+ 컨테이너 중지
++ 컨테이너 중지<br>
 `$ docker stop {container ID}`
 
-+ 컨테이너 중지 -> 시작
++ 컨테이너 중지 -> 시작<br>
 `$ docker start {container ID}`
 
-+ 컨테이너 중지 -> 제거
++ 컨테이너 중지 -> 제거<br>
 `$ docker rm {container ID#1} {container ID#2}`
 
-+ 컨테이너 생성
++ 컨테이너 생성<br>
 `$ docker creat`
 
-+ 로컬에 저장된 이미지들 목록
++ 로컬에 저장된 이미지들 목록<br>
 `$ docker images`
 
-+ 내 로컬에 있는 이미지를 원격 레포지토리로 보냄
++ 내 로컬에 있는 이미지를 원격 레포지토리로 보냄<br>
 `$ docker push`
 
-+ 원격 레포지토리의 이미지를 로컬로 당겨옴
++ 원격 레포지토리의 이미지를 로컬로 당겨옴<br>
 `$ docker pull`
 
-+ 이미지 삭제
++ 이미지 삭제<br>
 `$ docker rmi {image ID}`
 
-+ 컨테이너 로그
++ 컨테이너 로그<br>
 `$ docker logs --tail 10 {container ID}`
 
-+ 실시간 컨테이너 로그
++ 실시간 컨테이너 로그<br>
 `$ docker logs -f {container ID}`
 
-+ 컨테이너 안에서 프로세스가 실행되고 있는 그 상태의 쉘로 접속
++ 컨테이너 안에서 프로세스가 실행되고 있는 그 상태의 쉘로 접속<br>
 `$ docker attach {container ID}` 
 
-+ 컨테이너 안의 변경사항들을 이미지에 반영(커밋)
++ 컨테이너 안의 변경사항들을 이미지에 반영(커밋)<br>
 `$ docker commit {container ID} {image ID}:{tag}`
 
-+ 실행중인 컨테이너에 명령 실행, 내부 쉘 접속 (run은 새로 컨테이너를 만들어 실행, exec는 실행 중인 컨테이너에 명령 실행)
++ 실행중인 컨테이너에 명령 실행, 내부 쉘 접속 (run은 새로 컨테이너를 만들어 실행, exec는 실행 중인 컨테이너에 명령 실행)<br>
 ```
 $ docker exec [option] {container ID} command [arg ...]
 $ (예) docker exec -it mysql /bin/bash
 ```
 
-+ 도커 컨테이너 업데이트 : 업데이트시 컨테이너에 생성된 파일은 모두 삭제될 수 있음. 유지해야 할 데이터는 컨테이너 내부가 아닌 외부 스토리지에 저장.
++ 도커 컨테이너 업데이트 : 업데이트시 컨테이너에 생성된 파일은 모두 삭제될 수 있음. 유지해야 할 데이터는 컨테이너 내부가 아닌 외부 스토리지에 저장.<br>
 
-+ 도커 컴포즈 : 도커 컴포즈 툴을 이용해, 도커 명령을 하나의 설정으로 간편하게 처리 가능
++ 도커 컴포즈 : 도커 컴포즈 툴을 이용해, 도커 명령을 하나의 설정으로 간편하게 처리 가능<br>
 [Docker Compose](https://docs.docker.com/compose/)
 
 + exit 실행시, 쉘 & 컨테이너 자동 종료
