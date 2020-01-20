@@ -186,7 +186,7 @@ $ sudo pkill -SIGHUP dockerd
 (/아래)
 
 
-(설치 확인)
+(설치 확인을 위한 이미지 실행)
 #### CUDA Toolkit 9.0 버전의 'nvidia/cuda:9.0-base' 컨테이너 이미지 다운, 'nvidia-smi' 명령어를 컨테이어 안에서 실행
 $ docker run --runtime=nvidia --rm nvidia/cuda:9.0-base nvidia-smi
 ('--runtime=nvidia' 옵션 : Host의 Nvidia 드라이버가 컨테이너에서도 잘 적용될 수 있음을 직업 확인)
@@ -232,6 +232,13 @@ torch.cuda.get_device_name(0)
 (출력) 'GeForce GTX 1080 Ti'
 ```
 <br><br>
+
+
+## 도커 시스템 확인
+```bash
+$ sudo systemctl status docker
+```
++ `systemctl` : 리눅스에서 서비스를 등록, 삭제(mask, unmask) / 활성화, 비활성화(enable, disable) / 시작, 중지, 재시작(start, stop, restart) / 상태 확인(status) / 서비스 확인(list-units, list-unit-files)을 할 수 있는 명령어
 
 
 ## 공유 디렉토리 설정
