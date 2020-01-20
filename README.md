@@ -22,7 +22,7 @@ sudo apt-get install curl
 sudo apt-get install software-properties-common
 ```
 
-+ (참고) `apt-get update` 중 아래와 같이 키 에러가 발생한다면, 
++ (참고) `apt-get update` 중 아래와 같이 키 에러가 발생한다면, <br>
 ` W: GPG 오류: http://nginx.org trusty Release: 다음 서명들은 공개키가 없기 때문에 인증할 수 없습니다: NO_PUBKEY ABF5BD827BD9BF62` 
 
 ```sh
@@ -37,16 +37,16 @@ $ sudo apt-get update
 
 + (참고) GPG (GNU Privacy Guard ,GnuPG) : 배포 파일의 인증을 확인하는데 사용되는 자유 소프트웨어 패키지. 
 
-+ (참고) apt-transport-https : 패키지 관리자가 https를 통해 데이터 및 패키지에 접근할 수 있도록 한다.
-+ (참고) ca-certificates : ca-certificate는 certificate authority에서 발행되는 디지털 서명. SSL 인증서의 PEM 파일이 포함되어 있어 SSL 기반 앱이 SSL 연결이 되어있는지 확인 가능
++ (참고) apt-transport-https : 패키지 관리자가 https 를 통해 데이터 및 패키지에 접근할 수 있도록 한다.
++ (참고) ca-certificates : ca-certificate 는 certificate authority 에서 발행되는 디지털 서명. SSL 인증서의 PEM 파일이 포함되어 있어 SSL 기반 앱이 SSL 연결이 되어있는지 확인 가능
 + (참고) curl : 특정 웹사이트에서 데이터를 다운로드 받을 때 사용
-+ (참고) software-properties-common : PPA를 추가하거나 제거할 때 사용
++ (참고) software-properties-common : PPA 를 추가하거나 제거할 때 사용
 + (참고) PPA (Personal Package Archive) :  개인 패키지 저장소. 개발자가 소스코드를 업로드하면 자동으로 패키지화함. 사용자가 다운로드 받아 설치할 수 있게 해주는 소프트웨어 저장소.
-+ (참고) wget대신 굳이 curl을 쓰는 이유 : 
++ (참고) wget 대신 굳이 curl 을 쓰는 이유 : 
 	+ 둘 다 웹사이트의 데이터를 다운로드 받을 수 있음. 
-	+ curl은 더 다양한 프로토콜 지원. 더 다양한 플랫폼에서 빌드/작동 가능. 자동 압축해제 지원. 업로드와 보내는 방법 지원. 
-	+ wget은 왼손만으로 타이핑 가능. HTTP POST 지원
-+ (참고) `|` : 파이프라인, wget/curl으로 파일을 다운받은 후 셸을 실행한다는 의미
+	+ curl 은 더 다양한 프로토콜 지원. 더 다양한 플랫폼에서 빌드/작동 가능. 자동 압축해제 지원. 업로드와 보내는 방법 지원. 
+	+ wget 은 왼손만으로 타이핑 가능. HTTP POST 지원
++ (참고) `|` : 파이프라인, wget/curl 으로 파일을 다운받은 후 셸을 실행한다는 의미
 
 
 
