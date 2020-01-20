@@ -102,20 +102,27 @@ $ sudo usermod -aG docker {USER}
 
 
 ## 이미지 실행
-### 공통
+### 예시
 ```bash
+(포멧)
+$ docker run [OPTIONS] IMAGE [COMMAND] 
+
 (ubuntu 실행시)
 $ docker run ubuntu:16.04
-(예시> pytorch, StepanKuzmin의 pytorch-notebook)
+
+(pytorch, StepanKuzmin의 pytorch-notebook)
 $ docker run -it --rm -p 8888:8888 stepankuzmin/pytorch-notebook
+
+(tensorflow/tensorflow)
+$ docker run -it -p 8888:8888 tensorflow/tensorflow [command]
+$ docker run --runtime=nvidia -it -p 8888:8888 tensorflow/tensorflow:latest-gpu
+(Dockerhub의 official tensorflow-gpu 컨테이너 실행 가이드 참고)
+(Dockerhub -> tensorflow/tensorflow -> tags -> latest-gpu-py3 -> Start GPU (CUDA) container)
 ```
 
 
-### tensorflow/tensorflow 이미지 실행
+### tensorflow/tensorflow 이미지
 ```bash
-(참고)
-$ docker run [OPTIONS] IMAGE [COMMAND] 
-(tensorflow/tensorflow)
 $ docker run -it -p 8888:8888 tensorflow/tensorflow [command]
 ```
 + option
@@ -148,10 +155,10 @@ Jupyter notebook
 + `docker attach {container name}`
 	+ 컨테이너 생성 시 실행하고 있던 프로세스의 상태 그대로 접속 (jupyter server를 실행시켰을 때의 콘솔 상태로 attach)
 	+ ctrl-c를 눌러 확인
+<br><br>
 
 
-
-### tensorflow-gpu 이미지 실행
+## Nvidia-docker2, tensorflow-gpu 이미지 설치할 경우
 + [Nvidia-docker2 설치](https://github.com/NVIDIA/nvidia-docker)
 ```bash
 (nvidia-docker1 설치 되어있을 경우 삭제)
@@ -168,26 +175,40 @@ $ curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
 (ubuntu16.04의 경우 `$distribution`자리에 `ubuntu16.04`수동 입력)
 $ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
 
+(Nvidia-docker2 설치)
 $ sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
 (시스템 재부팅하여 도커 데몬 재실행)
 $ sudo systemctl restart docker
 
+
+(아래는 과거 버전)
 (Nvidia-docker2 설치)
 $ sudo apt-get install -y nvidia-docker2
 $ sudo pkill -SIGHUP dockerd
+(/아래)
+
 
 (설치 확인)
-(예> CUDA Toolkit 9.0 버전의 'nvidia/cuda:9.0-base' 컨테이너 이미지 다운, 'nvidia-smi' 명령어를 컨테이어 안에서 실행)
+#### CUDA Toolkit 9.0 버전의 'nvidia/cuda:9.0-base' 컨테이너 이미지 다운, 'nvidia-smi' 명령어를 컨테이어 안에서 실행
 $ docker run --runtime=nvidia --rm nvidia/cuda:9.0-base nvidia-smi
 ('--runtime=nvidia' 옵션 : Host의 Nvidia 드라이버가 컨테이너에서도 잘 적용될 수 있음을 직업 확인)
+#### Test nvidia-smi with the latest official CUDA image
+$ docker run --gpus all nvidia/cuda:9.0-base nvidia-smi
+
+# Start a GPU enabled container on two GPUs
+$ docker run --gpus 2 nvidia/cuda:9.0-base nvidia-smi
+
+# Starting a GPU enabled container on specific GPUs
+$ docker run --gpus '"device=1,2"' nvidia/cuda:9.0-base nvidia-smi
+$ docker run --gpus '"device=UUID-ABCDEF,1"' nvidia/cuda:9.0-base nvidia-smi
+
+# Specifying a capability (graphics, compute, ...) for my container
+# Note this is rarely if ever used this way
+$ docker run --gpus all,capabilities=utility nvidia/cuda:9.0-base nvidia-smi
 ```
+<br><br>
 
-
-+ Dockerhub의 official tensorflow-gpu 컨테이너 실행 가이드 참고
-	+ Dockerhub -> tensorflow/tensorflow -> tags -> latest-gpu-py3 -> Start GPU (CUDA) container
-
-`$ docker run --runtime=nvidia -it -p 8888:8888 tensorflow/tensorflow:latest-gpu`
-
+## gpu 인식 확인 
 + 실행된 gpu 컨테이너의 jupyter notebook 안에서 gpu를 잘 인식하는지 확인
 ```python
 from tensorflow.python.client import device_lib
@@ -197,9 +218,11 @@ def get_available_gpus():
 get_available_gpus()
 (출력) ['/device:GPU:0', '/device:XLA_GPU:0']
 ```
+<br><br>
 
-+ PyTorch의 경우
-	+ 바로 전 단계까지 확인 후, 노트북 cell에서 파이토치 설치
+
+## PyTorch의 경우
++ 노트북 cell 또는 bash에서 파이토치 설치
 `!pip install torch torchvision`
 + 또는, 컨테이너 쉘에 새로 접속 하여 설치
 `$ docker exec -it {container_name} /bin/bash`
@@ -210,28 +233,6 @@ import torch
 torch.cuda.get_device_name(0)
 (출력) 'GeForce GTX 1080 Ti'
 ```
-
-### Dockerhub
-+ Docker image 보관
-+ (Public repository) tensorflow/tensoflow 다운, 활용
-	+ cpu 버전 : tensorflow/tensorflow:latest, (tab)
-	+ gpu 버전 : (Nvidia) tensorflow/tensorflow:latest-gpu
-	+ PyTorch 활용 : TF 컨테이너 위에 pip로 pytorch 설치 후 이미지에 변경사항 커밋
-+ Nvidia-docker 프로젝트는 윈도우 지원 않함
-	+ tensorflow-gpu 설치 불가
-	+ cpu 버전 설치 가능
-+ 사용시 호스트 OS(Ubonto or Linux)에는 아래 내용만 설치
-	+ gpu 경우 : 그래픽카드와 맞는 버전의 Nvidia-driver, docker, nvidia-docker2
-	+ cpu 경우 : docker
-
-<br><br>
-
-
-## 컨테이너 안에서 충돌 발생시
-+ Tensorflow 컨테이너는 root권한으로 모든 파이썬 패키지가 설치
-+ docker exec 명령어로 컨테이너 쉘에 접속한 뒤, pip으로만 패키지를 설치/삭제
-+ 안될경우, 해당 컨테이너를 내리고 삭제한 뒤 기존에 커밋했었던 다른 이미지로 다시 컨테이너 띄우기
-+ 안될경우, tensorflow 버전이 문제 -> dockerhub에 있는 tensorflow 이미지의  다른 tag로 교체
 <br><br>
 
 
@@ -259,6 +260,28 @@ $ docker run -it -p 8888:8888 -v ${HOME}/code:/notebooks  tensorflow/tensorflo
 ```
 <br><br>
 
+### (참고) Dockerhub
++ Docker image 보관
++ (Public repository) tensorflow/tensoflow 다운, 활용
+	+ cpu 버전 : tensorflow/tensorflow:latest, (tab)
+	+ gpu 버전 : (Nvidia) tensorflow/tensorflow:latest-gpu
+	+ PyTorch 활용 : TF 컨테이너 위에 pip로 pytorch 설치 후 이미지에 변경사항 커밋
++ Nvidia-docker 프로젝트는 윈도우 지원 않함
+	+ tensorflow-gpu 설치 불가
+	+ cpu 버전 설치 가능
++ 사용시 호스트 OS(Ubonto or Linux)에는 아래 내용만 설치
+	+ gpu 경우 : 그래픽카드와 맞는 버전의 Nvidia-driver, docker, nvidia-docker2
+	+ cpu 경우 : docker
+<br><br>
+
+
+## (참고) 컨테이너 안에서 충돌 발생시
++ Tensorflow 컨테이너는 root권한으로 모든 파이썬 패키지가 설치
++ docker exec 명령어로 컨테이너 쉘에 접속한 뒤, pip으로만 패키지를 설치/삭제
++ 안될경우, 해당 컨테이너를 내리고 삭제한 뒤 기존에 커밋했었던 다른 이미지로 다시 컨테이너 띄우기
++ 안될경우, tensorflow 버전이 문제 -> dockerhub에 있는 tensorflow 이미지의  다른 tag로 교체
+<br><br>
+
 
 ## (참고) 팁
 + 많이 쓰는 docker 명령어들은 alias, 혹은 스크립트를 짜서 로컬에 놓으면 좀 더 편하게 사용 가능
@@ -268,7 +291,7 @@ $ docker run -it -p 8888:8888 -v ${HOME}/code:/notebooks  tensorflow/tensorflo
 <br><br>
 
 
-## 도커 명령어
+## (참고) 도커 명령어
 + 실행중인 컨테이너 목록<br>
 `$ docker ps -a`
 
