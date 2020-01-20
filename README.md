@@ -60,7 +60,6 @@ $ sudo apt-get update
 <br>
 
 + [ubuntu]
-
 ```bash
 $ sudo apt-get update && sudo apt-get install docker-ce
 (Docker는 커맨드 실행 시 root 권한이 필요)
