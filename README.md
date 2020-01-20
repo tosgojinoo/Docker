@@ -52,8 +52,10 @@ $ sudo apt-get update
 ## tensorflow-gpu 사용 순서
 + Nvidia Graphics Driver, Docker, Nvidia-docker2 설치
 + Nvidia GPU, 그리고 Ubuntu OS 가정
+<br><br>
 
-+ Nvidia Graphics Driver 설치
+
+## Nvidia Graphics Driver 설치
 ```bash
 (설치된 gpu에 맞는 드라이버 확인)
 $ ubuntu-drivers devices
@@ -69,6 +71,8 @@ $ nvidia-smi
 ```
 <br><br>
 
+
+
 ## Docker CE 설치
 + [Windows] : 윈도우 10 버전에서 하이퍼-V(Hyper-V) 가상머신을 사용해 도커를 실행하려면, 윈도우 10 프로페셔널 이상 운영체제가 설치되어야 함 주의
 + [MacOS, Windows]: .dmg 혹은 .exe 파일 다운로드 후 인스톨러로 Desktop version 설치(추천)
@@ -76,7 +80,7 @@ $ nvidia-smi
 + [MacOS, Windows]: 이후 PowerShell 혹은 Terminal에서 `docker version` 커맨드로 설치 확인
 + [Windows]: 만약 PowerShell이 없다면, ‘Docker toolbox’를 함께 설치하면 Docker client CLI 실행 가능
 	+ [https://docs.docker.com/toolbox/toolbox_install_windows/#step-3-verify-your-installation](https://docs.docker.com/toolbox/toolbox_install_windows/#step-3-verify-your-installation)
-<br>
+
 
 + [ubuntu]
 ```bash
@@ -97,29 +101,13 @@ $ sudo usermod -aG docker {USER}
 <br><br>
 
 
-## Dockerhub
-+ Docker image 보관
-+ (Public repository) tensorflow/tensoflow 다운, 활용
-	+ cpu 버전 : tensorflow/tensorflow:latest, (tab)
-	+ gpu 버전 : (Nvidia) tensorflow/tensorflow:latest-gpu
-	+ PyTorch 활용 : TF 컨테이너 위에 pip로 pytorch 설치 후 이미지에 변경사항 커밋
-+ Nvidia-docker 프로젝트는 윈도우 지원 않함
-	+ tensorflow-gpu 설치 불가
-	+ cpu 버전 설치 가능
-+ 사용시 호스트 OS(Ubonto or Linux)에는 아래 내용만 설치
-	+ gpu 경우 : 그래픽카드와 맞는 버전의 Nvidia-driver, docker, nvidia-docker2
-	+ cpu 경우 : docker
-<br><br>
-
-
 
 ## 이미지 실행
 ### 공통
-+ gpu용은 아래 'tensorflow-gpu 사용 순서' 참고
 ```bash
 (ubuntu 실행시)
 $ docker run ubuntu:16.04
-(pytorch, StepanKuzmin의 pytorch-notebook)
+(예시> pytorch, StepanKuzmin의 pytorch-notebook)
 $ docker run -it --rm -p 8888:8888 stepankuzmin/pytorch-notebook
 ```
 
@@ -164,26 +152,7 @@ Jupyter notebook
 
 
 
-### tensorflow-gpu 사용 순서
-+ (gpu 버전) Nvidia Graphics Driver, Docker, Nvidia-docker2 설치
-+ Nvidia GPU, 그리고 Ubuntu OS 가정
-
-+ Nvidia Graphics Driver 설치
-```bash
-(설치된 gpu에 맞는 드라이버 확인)
-$ ubuntu-drivers devices
-(recommended driver 바로 설치)
-$ sudo ubuntu-drivers autoinstall
-(또는, ppa 추가 후 설치)
-$ sudo add-apt-repository ppa:graphics-drivers/ppa
-$ sudo apt update
-$ sudo apt install nvidia-415
-(재부팅)
-(설치 확인)
-$ nvidia-smi
-```
-
-+ Docker 설치(CE 설치 참고)
+### tensorflow-gpu 이미지 실행
 + [Nvidia-docker2 설치](https://github.com/NVIDIA/nvidia-docker)
 ```bash
 (nvidia-docker1 설치 되어있을 경우 삭제)
@@ -191,7 +160,6 @@ $ nvidia-smi
 $ docker volume ls -q -f driver=nvidia-docker | xargs -r -I{} -n1 docker ps -q -a -f volume={} | xargs -r docker rm -f
 $ sudo apt-get purge -y nvidia-docker
 
-(Nvidia driver 설치)
 (apt-key에 package repository 추가하고 apt-get update)
 $ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
 
@@ -201,7 +169,6 @@ $ curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
 (ubuntu16.04의 경우 `$distribution`자리에 `ubuntu16.04`수동 입력)
 $ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
 
-(nvidia-docker 설치)
 $ sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
 (시스템 재부팅하여 도커 데몬 재실행)
 $ sudo systemctl restart docker
@@ -215,6 +182,7 @@ $ sudo pkill -SIGHUP dockerd
 $ docker run --runtime=nvidia --rm nvidia/cuda:9.0-base nvidia-smi
 ('--runtime=nvidia' 옵션 : Host의 Nvidia 드라이버가 컨테이너에서도 잘 적용될 수 있음을 직업 확인)
 ```
+
 
 + Dockerhub의 official tensorflow-gpu 컨테이너 실행 가이드 참고
 	+ Dockerhub -> tensorflow/tensorflow -> tags -> latest-gpu-py3 -> Start GPU (CUDA) container
@@ -243,6 +211,20 @@ import torch
 torch.cuda.get_device_name(0)
 (출력) 'GeForce GTX 1080 Ti'
 ```
+
+### Dockerhub
++ Docker image 보관
++ (Public repository) tensorflow/tensoflow 다운, 활용
+	+ cpu 버전 : tensorflow/tensorflow:latest, (tab)
+	+ gpu 버전 : (Nvidia) tensorflow/tensorflow:latest-gpu
+	+ PyTorch 활용 : TF 컨테이너 위에 pip로 pytorch 설치 후 이미지에 변경사항 커밋
++ Nvidia-docker 프로젝트는 윈도우 지원 않함
+	+ tensorflow-gpu 설치 불가
+	+ cpu 버전 설치 가능
++ 사용시 호스트 OS(Ubonto or Linux)에는 아래 내용만 설치
+	+ gpu 경우 : 그래픽카드와 맞는 버전의 Nvidia-driver, docker, nvidia-docker2
+	+ cpu 경우 : docker
+
 <br><br>
 
 
