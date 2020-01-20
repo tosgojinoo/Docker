@@ -1,5 +1,112 @@
 # Docker
 
+## 설치 전 (ubuntu)
++ 이전 버전의 도커가 설치되어 있다면, 삭제
+```sh
+$ sudo apt-get remove docker docker-engine docker.io
+```
+
++ 설치에 필요한 패키지 설치
+```sh
+(입력시 '\' 및 줄바꿈 제외)
+sudo apt-get update && sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    software-properties-common
+(또는)
+sudo apt-get update 
+sudo apt-get install apt-transport-https 
+sudo apt-get install ca-certificates
+sudo apt-get install curl 
+sudo apt-get install software-properties-common
+```
+
++ (참고) `apt-get update` 중 
+` W: GPG 오류: http://nginx.org trusty Release: 다음 서명들은 공개키가 없기 때문에 인증할 수 없습니다: NO_PUBKEY ABF5BD827BD9BF62` 의 에러가 발생한다면, 
+
+```sh
+('-- recv' 뒤에 오류에서 언급된 PUBKEY 값 입력)
+$ gpg --keyserver keyserver.ubuntu.com --recv ABF5BD827BD9BF62
+$ gpg --export --armor ABF5BD827BD9BF62 | sudo apt-key add -
+(출력 : OK)
+
+(다시 업데이트 실행)
+$ sudo apt-get update
+```
+
++ (참고) GPG (GNU Privacy Guard ,GnuPG) : 배포 파일의 인증을 확인하는데 사용되는 자유 소프트웨어 패키지. 
+
++ (참고) apt-transport-https : 패키지 관리자가 https를 통해 데이터 및 패키지에 접근할 수 있도록 한다.
++ (참고) ca-certificates : ca-certificate는 certificate authority에서 발행되는 디지털 서명. SSL 인증서의 PEM 파일이 포함되어 있어 SSL 기반 앱이 SSL 연결이 되어있는지 확인 가능
++ (참고) curl : 특정 웹사이트에서 데이터를 다운로드 받을 때 사용
++ (참고) software-properties-common : PPA를 추가하거나 제거할 때 사용
++ (참고) PPA (Personal Package Archive) :  개인 패키지 저장소. 개발자가 소스코드를 업로드하면 자동으로 패키지화함. 사용자가 다운로드 받아 설치할 수 있게 해주는 소프트웨어 저장소.
++ (참고) wget대신 굳이 curl을 쓰는 이유 : 
+	+ 둘 다 웹사이트의 데이터를 다운로드 받을 수 있음. 
+	+ curl은 더 다양한 프로토콜 지원. 더 다양한 플랫폼에서 빌드/작동 가능. 자동 압축해제 지원. 업로드와 보내는 방법 지원. 
+	+ wget은 왼손만으로 타이핑 가능. HTTP POST 지원
++ (참고) `|` : 파이프라인, wget/curl으로 파일을 다운받은 후 셸을 실행한다는 의미
+
+
+
+## Docker CE 설치
++ [Windows] : 윈도우 10 버전에서 하이퍼-V(Hyper-V) 가상머신을 사용해 도커를 실행하려면, 윈도우 10 프로페셔널 이상 운영체제가 설치되어야 함 주의
++ [MacOS, Windows]: .dmg 혹은 .exe 파일 다운로드 후 인스톨러로 Desktop version 설치(추천)
+	+ [https://www.docker.com/get-started](www.docker.com/get-started)
++ [MacOS, Windows]: 이후 PowerShell 혹은 Terminal에서 `docker version` 커맨드로 설치 확인
++ [Windows]: 만약 PowerShell이 없다면, ‘Docker toolbox’를 함께 설치하면 Docker client CLI 실행 가능
+	+ [https://docs.docker.com/toolbox/toolbox_install_windows/#step-3-verify-your-installation](https://docs.docker.com/toolbox/toolbox_install_windows/#step-3-verify-your-installation)
+<br>
++ [ubuntu]
+```bash
+$ sudo apt-get update && sudo apt-get install docker-ce
+(Docker는 커맨드 실행 시 root 권한이 필요)
+(매번 sudo를 붙이는 대신, root 권한 부여)
+(docker group 생성)
+$ sudo groupadd docker
+(docker group에 사용자 추가)
+$ sudo usermod -aG docker {USER}
+(log out and log back in)
+```
+
++ (참고) Linux 인스톨 과정
+	+ Package manager repository setup 
+	+ 패키지 매니저 update
+	+ 패키지 매니저로 docker install
+
+
+
+## 공유 디렉토리 설정
++ 휘발성 : 컨테이너 실행 종료 후 따로 설정을 해 주지 않으면 기본적으로 자신의 자취를 Host OS에 남기지 않음
++ 작업/저장 파일들의 호스트 직접 접근 불가
++ 컨테이너가 내려간 상태에서 삭제되면 같이 삭제
++ 때문에, Host OS <=> 컨테이너 간  공유 디렉토리 생상 관리
++ 최초 컨테이너 run 시에,  
+	+ volume option인 -v를 사용, 또는
+	+ 마운트 옵션인 —mount, —bind 등을 사용해 해결
++ docker volume
+	+ 호스트의 파일시스템과 격리된 도커 컨테이너의 파일시스템을 이어주는 역할
+	+ docker run 커맨드 실행시 -v 옵션으로  임시로 생성, 또는
+	+ volume만 따로 생성하고 run 시에 붙여서  실행
+	+ —mount, —bind 또한 비슷한 개념의 옵션
++ 적용 :
+	+ ${HOME}/code : host pash
+	+ /notebooks  : Container pash
+```bash
+(이전)
+$ docker run -it -p 8888:8888 tensorflow/tensorflow [command]
+(적용)
+$ docker run -it -p 8888:8888 -v ${HOME}/code:/notebooks  tensorflow/tensorflow
+```
+
+
+## (참고) 팁
++ 많이 쓰는 docker 명령어들은 alias, 혹은 스크립트를 짜서 로컬에 놓으면 좀 더 편하게 사용 가능
++ Tensorboard 실행을 염두할 경우, 처음에 컨테이너의 포트를 하나 더 열어주시는 것 좋음 (docker run -it -p 8888:8888 -p 8889:6006 tf/tf:latest) 
++ 노출될 포트 설정를 포함한 ‘run’의 옵션들은 이미지로부터 컨테이너가 생성될 때만 설정할 수 있고, 컨테이너로 올린 이후에 변경은 힘듭니다. 
+ + 패키지를 다 깔았는데 포트 오픈을 깜빡했다면? -> 변경사항을 이미지에 커밋 후 다시 run
+
 ## Dockerhub
 + Docker image 보관
 + (Public repository) tensorflow/tensoflow 다운, 활용
@@ -14,31 +121,6 @@
 	+ cpu 경우 : docker
 
 
-## Docker CE 설치
-+ [Windows] : 윈도우 10 버전에서 하이퍼-V(Hyper-V) 가상머신을 사용해 도커를 실행하려면, 윈도우 10 프로페셔널 이상 운영체제가 설치되어야 함 주의
-+ [MacOS, Windows]: .dmg 혹은 .exe 파일 다운로드 후 인스톨러로 Desktop version 설치(추천)
-	+ [https://www.docker.com/get-started](www.docker.com/get-started)
-+ [MacOS, Windows, linux]: 이후 PowerShell 혹은 Terminal에서 `docker version` 커맨드로 설치 확인
-+ [Windows]: 만약 PowerShell이 없다면, ‘Docker toolbox’를 함께 설치하면 Docker client CLI 실행 가능
-	+ [https://docs.docker.com/toolbox/toolbox_install_windows/#step-3-verify-your-installation](https://docs.docker.com/toolbox/toolbox_install_windows/#step-3-verify-your-installation)
-
-
-## (참고) Linux 인스톨 과정
-+ Package manager repository setup 
-+ 패키지 매니저 update
-+ 패키지 매니저로 docker install
-
-
-## Post-installation steps for linux
-+ Docker는 커맨드 실행 시 root 권한이 필요
-+ 매번 sudo를 붙이는 대신, root 권한 부여
-```bash
-(docker group 생성)
-$ sudo groupadd docker
-(docker group에 사용자 추가)
-$ sudo usermod -aG docker {USER}
-(log out and log back in)
-```
 
 
 ## 이미지 실행
@@ -90,36 +172,6 @@ Jupyter notebook
 	+ ctrl-c를 눌러 확인
 
 
-## 공유 디렉토리 설정
-+ 휘발성 : 컨테이너 실행 종료 후 따로 설정을 해 주지 않으면 기본적으로 자신의 자취를 Host OS에 남기지 않음
-+ 작업/저장 파일들의 호스트 직접 접근 불가
-+ 컨테이너가 내려간 상태에서 삭제되면 같이 삭제
-+ 때문에, Host OS <=> 컨테이너 간  공유 디렉토리 생상 관리
-+ 최초 컨테이너 run 시에,  
-	+ volume option인 -v를 사용, 또는
-	+ 마운트 옵션인 —mount, —bind 등을 사용해 해결
-+ docker volume
-	+ 호스트의 파일시스템과 격리된 도커 컨테이너의 파일시스템을 이어주는 역할
-	+ docker run 커맨드 실행시 -v 옵션으로  임시로 생성, 또는
-	+ volume만 따로 생성하고 run 시에 붙여서  실행
-	+ —mount, —bind 또한 비슷한 개념의 옵션
-+ 적용 :
-	+ ${HOME}/code : host pash
-	+ /notebooks  : Container pash
-```bash
-(이전)
-$ docker run -it -p 8888:8888 tensorflow/tensorflow [command]
-(적용)
-$ docker run -it -p 8888:8888 -v ${HOME}/code:/notebooks  tensorflow/tensorflow
-```
-
-
-## (참고) 팁
-+ 많이 쓰는 docker 명령어들은 alias, 혹은 스크립트를 짜서 로컬에 놓으면 좀 더 편하게 사용 가능
-+ Tensorboard 실행을 염두할 경우, 처음에 컨테이너의 포트를 하나 더 열어주시는 것 좋음 (docker run -it -p 8888:8888 -p 8889:6006 tf/tf:latest) 
-+ 노출될 포트 설정를 포함한 ‘run’의 옵션들은 이미지로부터 컨테이너가 생성될 때만 설정할 수 있고, 컨테이너로 올린 이후에 변경은 힘듭니다. 
- + 패키지를 다 깔았는데 포트 오픈을 깜빡했다면? -> 변경사항을 이미지에 커밋 후 다시 run
-
 
 ## tensorflow-gpu 사용 순서
 + (gpu 버전) Nvidia Graphics Driver, Docker, Nvidia-docker2 설치
@@ -148,19 +200,25 @@ $ nvidia-smi
 $ docker volume ls -q -f driver=nvidia-docker | xargs -r -I{} -n1 docker ps -q -a -f volume={} | xargs -r docker rm -f
 $ sudo apt-get purge -y nvidia-docker
 
+(Nvidia driver 설치)
 (apt-key에 package repository 추가하고 apt-get update)
+$ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+
 $ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
 $ curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
 $ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
 
+(nvidia-docker 설치)
 $ sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
+(시스템 재부팅하여 도커 데몬 재실행)
 $ sudo systemctl restart docker
 
 (Nvidia-docker2 설치)
 $ sudo apt-get install -y nvidia-docker2
 $ sudo pkill -SIGHUP dockerd
 
-(설치 확인, 'nvidia/cuda:9.0-base' 이미지 받아 'nvidia-smi' 명령어를 컨테이어 안에서 실행)
+(설치 확인)
+(예> CUDA Toolkit 9.0 버전의 'nvidia/cuda:9.0-base' 컨테이너 이미지 다운, 'nvidia-smi' 명령어를 컨테이어 안에서 실행)
 $ docker run --runtime=nvidia --rm nvidia/cuda:9.0-base nvidia-smi
 ('--runtime=nvidia' 옵션 : Host의 Nvidia 드라이버가 컨테이너에서도 잘 적용될 수 있음을 직업 확인)
 ```
