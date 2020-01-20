@@ -78,36 +78,6 @@ $ sudo usermod -aG docker {USER}
 
 
 
-## 공유 디렉토리 설정
-+ 휘발성 : 컨테이너 실행 종료 후 따로 설정을 해 주지 않으면 기본적으로 자신의 자취를 Host OS에 남기지 않음
-+ 작업/저장 파일들의 호스트 직접 접근 불가
-+ 컨테이너가 내려간 상태에서 삭제되면 같이 삭제
-+ 때문에, Host OS <=> 컨테이너 간  공유 디렉토리 생상 관리
-+ 최초 컨테이너 run 시에,  
-	+ volume option인 -v를 사용, 또는
-	+ 마운트 옵션인 —mount, —bind 등을 사용해 해결
-+ docker volume
-	+ 호스트의 파일시스템과 격리된 도커 컨테이너의 파일시스템을 이어주는 역할
-	+ docker run 커맨드 실행시 -v 옵션으로  임시로 생성, 또는
-	+ volume만 따로 생성하고 run 시에 붙여서  실행
-	+ —mount, —bind 또한 비슷한 개념의 옵션
-+ 적용 :
-	+ ${HOME}/code : host pash
-	+ /notebooks  : Container pash
-```bash
-(이전)
-$ docker run -it -p 8888:8888 tensorflow/tensorflow [command]
-(적용)
-$ docker run -it -p 8888:8888 -v ${HOME}/code:/notebooks  tensorflow/tensorflow
-```
-
-
-## (참고) 팁
-+ 많이 쓰는 docker 명령어들은 alias, 혹은 스크립트를 짜서 로컬에 놓으면 좀 더 편하게 사용 가능
-+ Tensorboard 실행을 염두할 경우, 처음에 컨테이너의 포트를 하나 더 열어주시는 것 좋음 (docker run -it -p 8888:8888 -p 8889:6006 tf/tf:latest) 
-+ 노출될 포트 설정를 포함한 ‘run’의 옵션들은 이미지로부터 컨테이너가 생성될 때만 설정할 수 있고, 컨테이너로 올린 이후에 변경은 힘듭니다. 
- + 패키지를 다 깔았는데 포트 오픈을 깜빡했다면? -> 변경사항을 이미지에 커밋 후 다시 run
-
 ## Dockerhub
 + Docker image 보관
 + (Public repository) tensorflow/tensoflow 다운, 활용
@@ -261,6 +231,35 @@ torch.cuda.get_device_name(0)
 + 안될경우, tensorflow 버전이 문제 -> dockerhub에 있는 tensorflow 이미지의  다른 tag로 교체
 
 
+## 공유 디렉토리 설정
++ 휘발성 : 컨테이너 실행 종료 후 따로 설정을 해 주지 않으면 기본적으로 자신의 자취를 Host OS에 남기지 않음
++ 작업/저장 파일들의 호스트 직접 접근 불가
++ 컨테이너가 내려간 상태에서 삭제되면 같이 삭제
++ 때문에, Host OS <=> 컨테이너 간  공유 디렉토리 생상 관리
++ 최초 컨테이너 run 시에,  
+	+ volume option인 `-v`를 사용, 또는
+	+ 마운트 옵션인 `—mount`, `—bind` 등을 사용해 해결
++ docker volume
+	+ 호스트의 파일시스템과 격리된 도커 컨테이너의 파일시스템을 이어주는 역할
+	+ docker run 커맨드 실행시 `-v` 옵션으로  임시로 생성, 또는
+	+ volume만 따로 생성하고 run 시에 붙여서  실행
+	+ `—mount`, `—bind` 또한 비슷한 개념의 옵션
++ 적용 :
+	+ `${HOME}/code` : host pash
+	+ `/notebooks ` : Container pash
+```bash
+(이전)
+$ docker run -it -p 8888:8888 tensorflow/tensorflow [command]
+(적용)
+$ docker run -it -p 8888:8888 -v ${HOME}/code:/notebooks  tensorflow/tensorflow
+```
+
+
+## (참고) 팁
++ 많이 쓰는 docker 명령어들은 alias, 혹은 스크립트를 짜서 로컬에 놓으면 좀 더 편하게 사용 가능
++ Tensorboard 실행을 염두할 경우, 처음에 컨테이너의 포트를 하나 더 열어주시는 것 좋음 (docker run -it -p 8888:8888 -p 8889:6006 tf/tf:latest) 
++ 노출될 포트 설정를 포함한 ‘run’의 옵션들은 이미지로부터 컨테이너가 생성될 때만 설정할 수 있고, 컨테이너로 올린 이후에 변경은 힘듭니다. 
+ + 패키지를 다 깔았는데 포트 오픈을 깜빡했다면? -> 변경사항을 이미지에 커밋 후 다시 run
 
 ## 도커 명령어
 
