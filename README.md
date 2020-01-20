@@ -206,8 +206,8 @@ $ docker run --gpus all,capabilities=utility nvidia/cuda:9.0-base nvidia-smi
 ```
 <br><br>
 
-## gpu 인식 확인 
-+ 실행된 gpu 컨테이너의 jupyter notebook 안에서 gpu를 잘 인식하는지 확인
+## GPU 인식 확인 
++ 실행된 GPU 컨테이너의 jupyter notebook 안에서 GPU 를 잘 인식하는지 확인
 ```python
 from tensorflow.python.client import device_lib
 def get_available_gpus():
