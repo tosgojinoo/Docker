@@ -72,7 +72,6 @@ $ nvidia-smi
 <br><br>
 
 
-
 ## Docker CE 설치
 + [Windows] : 윈도우 10 버전에서 하이퍼-V(Hyper-V) 가상머신을 사용해 도커를 실행하려면, 윈도우 10 프로페셔널 이상 운영체제가 설치되어야 함 주의
 + [MacOS, Windows]: .dmg 혹은 .exe 파일 다운로드 후 인스톨러로 Desktop version 설치(추천)
