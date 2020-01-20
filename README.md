@@ -41,7 +41,7 @@ $ sudo apt-get update
 + (참고) ca-certificates : ca-certificate 는 certificate authority 에서 발행되는 디지털 서명. SSL 인증서의 PEM 파일이 포함되어 있어 SSL 기반 앱이 SSL 연결이 되어있는지 확인 가능
 + (참고) curl : 특정 웹사이트에서 데이터를 다운로드 받을 때 사용
 + (참고) software-properties-common : PPA 를 추가하거나 제거할 때 사용
-+ (참고) PPA (Personal Package Archive) :  개인 패키지 저장소. 개발자가 소스코드를 업로드하면 자동으로 패키지화함. 사용자가 다운로드 받아 설치할 수 있게 해주는 소프트웨어 저장소.
++ (참고) PPA (Personal Package Archive) :  개인 패키지 저장소. 개발자가 소스코드를 업로드하면 자동으로 패키지화. 사용자가 다운로드 받아 설치할 수 있게 해주는 소프트웨어 저장소.
 + (참고) wget 대신 굳이 curl 을 쓰는 이유 : 
 	+ 둘 다 웹사이트의 데이터를 다운로드 받을 수 있음. 
 	+ curl 은 더 다양한 프로토콜 지원. 더 다양한 플랫폼에서 빌드/작동 가능. 자동 압축해제 지원. 업로드와 보내는 방법 지원. 
@@ -58,7 +58,9 @@ $ sudo apt-get update
 + [Windows]: 만약 PowerShell이 없다면, ‘Docker toolbox’를 함께 설치하면 Docker client CLI 실행 가능
 	+ [https://docs.docker.com/toolbox/toolbox_install_windows/#step-3-verify-your-installation](https://docs.docker.com/toolbox/toolbox_install_windows/#step-3-verify-your-installation)
 <br>
+
 + [ubuntu]
+
 ```bash
 $ sudo apt-get update && sudo apt-get install docker-ce
 (Docker는 커맨드 실행 시 root 권한이 필요)
