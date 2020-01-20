@@ -168,8 +168,6 @@ $ sudo apt-get purge -y nvidia-docker
 
 (apt-key에 package repository 추가하고 apt-get update)
 $ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-
-$ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
 $ curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
 (ubuntu18.04의 경우 `$distribution`에 `ubuntu18.04`입력됨)
 (ubuntu16.04의 경우 `$distribution`자리에 `ubuntu16.04`수동 입력)
