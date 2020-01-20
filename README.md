@@ -22,8 +22,8 @@ sudo apt-get install curl
 sudo apt-get install software-properties-common
 ```
 
-+ (참고) `apt-get update` 중 
-` W: GPG 오류: http://nginx.org trusty Release: 다음 서명들은 공개키가 없기 때문에 인증할 수 없습니다: NO_PUBKEY ABF5BD827BD9BF62` 의 에러가 발생한다면, 
++ (참고) `apt-get update` 중 아래와 같이 키 에러가 발생한다면, 
+` W: GPG 오류: http://nginx.org trusty Release: 다음 서명들은 공개키가 없기 때문에 인증할 수 없습니다: NO_PUBKEY ABF5BD827BD9BF62` 
 
 ```sh
 ('-- recv' 뒤에 오류에서 언급된 PUBKEY 값 입력)
@@ -206,6 +206,8 @@ $ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
 
 $ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
 $ curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+(ubuntu18.04의 경우 `$distribution`에 `ubuntu18.04`입력됨)
+(ubuntu16.04의 경우 `$distribution`자리에 `ubuntu16.04`수동 입력)
 $ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
 
 (nvidia-docker 설치)
