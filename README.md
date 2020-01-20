@@ -47,8 +47,27 @@ $ sudo apt-get update
 	+ curl 은 더 다양한 프로토콜 지원. 더 다양한 플랫폼에서 빌드/작동 가능. 자동 압축해제 지원. 업로드와 보내는 방법 지원. 
 	+ wget 은 왼손만으로 타이핑 가능. HTTP POST 지원
 + (참고) `|` : 파이프라인, wget/curl 으로 파일을 다운받은 후 셸을 실행한다는 의미
+<br><br>
 
+## tensorflow-gpu 사용 순서
++ Nvidia Graphics Driver, Docker, Nvidia-docker2 설치
++ Nvidia GPU, 그리고 Ubuntu OS 가정
 
++ Nvidia Graphics Driver 설치
+```bash
+(설치된 gpu에 맞는 드라이버 확인)
+$ ubuntu-drivers devices
+(recommended driver 바로 설치)
+$ sudo ubuntu-drivers autoinstall
+(또는, ppa 추가 후 설치)
+$ sudo add-apt-repository ppa:graphics-drivers/ppa
+$ sudo apt update
+$ sudo apt install nvidia-415
+(재부팅)
+(설치 확인)
+$ nvidia-smi
+```
+<br><br>
 
 ## Docker CE 설치
 + [Windows] : 윈도우 10 버전에서 하이퍼-V(Hyper-V) 가상머신을 사용해 도커를 실행하려면, 윈도우 10 프로페셔널 이상 운영체제가 설치되어야 함 주의
@@ -75,7 +94,7 @@ $ sudo usermod -aG docker {USER}
 	+ Package manager repository setup 
 	+ 패키지 매니저 update
 	+ 패키지 매니저로 docker install
-
+<br><br>
 
 
 ## Dockerhub
@@ -90,11 +109,12 @@ $ sudo usermod -aG docker {USER}
 + 사용시 호스트 OS(Ubonto or Linux)에는 아래 내용만 설치
 	+ gpu 경우 : 그래픽카드와 맞는 버전의 Nvidia-driver, docker, nvidia-docker2
 	+ cpu 경우 : docker
-
+<br><br>
 
 
 
 ## 이미지 실행
+### 공통
 + gpu용은 아래 'tensorflow-gpu 사용 순서' 참고
 ```bash
 (ubuntu 실행시)
@@ -104,7 +124,7 @@ $ docker run -it --rm -p 8888:8888 stepankuzmin/pytorch-notebook
 ```
 
 
-### tensorflow 이미지 실행
+### tensorflow/tensorflow 이미지 실행
 ```bash
 (참고)
 $ docker run [OPTIONS] IMAGE [COMMAND] 
@@ -144,7 +164,7 @@ Jupyter notebook
 
 
 
-## tensorflow-gpu 사용 순서
+### tensorflow-gpu 사용 순서
 + (gpu 버전) Nvidia Graphics Driver, Docker, Nvidia-docker2 설치
 + Nvidia GPU, 그리고 Ubuntu OS 가정
 
@@ -223,12 +243,15 @@ import torch
 torch.cuda.get_device_name(0)
 (출력) 'GeForce GTX 1080 Ti'
 ```
+<br><br>
+
 
 ## 컨테이너 안에서 충돌 발생시
 + Tensorflow 컨테이너는 root권한으로 모든 파이썬 패키지가 설치
 + docker exec 명령어로 컨테이너 쉘에 접속한 뒤, pip으로만 패키지를 설치/삭제
 + 안될경우, 해당 컨테이너를 내리고 삭제한 뒤 기존에 커밋했었던 다른 이미지로 다시 컨테이너 띄우기
 + 안될경우, tensorflow 버전이 문제 -> dockerhub에 있는 tensorflow 이미지의  다른 tag로 교체
+<br><br>
 
 
 ## 공유 디렉토리 설정
@@ -253,6 +276,7 @@ $ docker run -it -p 8888:8888 tensorflow/tensorflow [command]
 (적용)
 $ docker run -it -p 8888:8888 -v ${HOME}/code:/notebooks  tensorflow/tensorflow
 ```
+<br><br>
 
 
 ## (참고) 팁
@@ -260,9 +284,10 @@ $ docker run -it -p 8888:8888 -v ${HOME}/code:/notebooks  tensorflow/tensorflo
 + Tensorboard 실행을 염두할 경우, 처음에 컨테이너의 포트를 하나 더 열어주시는 것 좋음 (docker run -it -p 8888:8888 -p 8889:6006 tf/tf:latest) 
 + 노출될 포트 설정를 포함한 ‘run’의 옵션들은 이미지로부터 컨테이너가 생성될 때만 설정할 수 있고, 컨테이너로 올린 이후에 변경은 힘듭니다. 
  + 패키지를 다 깔았는데 포트 오픈을 깜빡했다면? -> 변경사항을 이미지에 커밋 후 다시 run
+<br><br>
+
 
 ## 도커 명령어
-
 + 실행중인 컨테이너 목록<br>
 `$ docker ps -a`
 
