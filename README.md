@@ -62,9 +62,9 @@ $ ubuntu-drivers devices
 # recommended driver 바로 설치
 $ sudo ubuntu-drivers autoinstall
 # 또는, ppa 추가 후 설치
-$ sudo add-apt-repository ppa:graphics-drivers/ppa
+$ sudo add-apt-repository ppa:graphics-drivers/ppa # ppa 추가
 $ sudo apt update
-$ sudo apt install nvidia-415
+$ sudo apt install nvidia-440 #(버전)
 # 재부팅
 # 설치 확인
 $ nvidia-smi
@@ -161,7 +161,7 @@ Jupyter notebook
 + [Nvidia-docker2 설치](https://github.com/NVIDIA/nvidia-docker)
 ```bash
 # nvidia-docker1 설치 되어있을 경우 삭제
-# (확인 필요)
+# ubuntu
 $ docker volume ls -q -f driver=nvidia-docker | xargs -r -I{} -n1 docker ps -q -a -f volume={} | xargs -r docker rm -f
 $ sudo apt-get purge -y nvidia-docker
 
@@ -238,13 +238,14 @@ torch.cuda.get_device_name(0)
 $ sudo systemctl status docker
 ```
 + `systemctl` : 리눅스에서 서비스를 등록, 삭제(mask, unmask) / 활성화, 비활성화(enable, disable) / 시작, 중지, 재시작(start, stop, restart) / 상태 확인(status) / 서비스 확인(list-units, list-unit-files)을 할 수 있는 명령어
+<br><br>
 
 
 ## 공유 디렉토리 설정
-+ 휘발성 : 컨테이너 실행 종료 후 따로 설정을 해 주지 않으면 기본적으로 자신의 자취를 Host OS에 남기지 않음
++ 컨테이너 실행 종료 후 따로 설정을 해 주지 않으면 기본적으로 자신의 자취를 Host OS에 남기지 않음(휘발성)
 + 작업/저장 파일들의 호스트 직접 접근 불가
 + 컨테이너가 내려간 상태에서 삭제되면 같이 삭제
-+ 때문에, Host OS <=> 컨테이너 간  공유 디렉토리 생상 관리
++ 때문에, Host OS <=> 컨테이너 간  공유 디렉토리 생성 관리
 + 최초 컨테이너 run 시에,  
 	+ volume option인 `-v`를 사용, 또는
 	+ 마운트 옵션인 `—mount`, `—bind` 등을 사용해 해결
@@ -254,13 +255,15 @@ $ sudo systemctl status docker
 	+ volume만 따로 생성하고 run 시에 붙여서  실행
 	+ `—mount`, `—bind` 또한 비슷한 개념의 옵션
 + 적용 :
-	+ `${HOME}/code` : host pash
-	+ `/notebooks ` : Container pash
+	+ `${HOME}/code` : host path
+	+ `/notebooks ` : container path
 ```bash
 # 이전
-$ docker run -it -p 8888:8888 tensorflow/tensorflow [command]
+$ docker run -it -p [host port]:[container port] -v ["$/{HOME}/code", host path]:["/notebooks ", container path] [image_id] [command]
 # 적용
-$ docker run -it -p 8888:8888 -v ${HOME}/code:/notebooks  tensorflow/tensorflow
+$ docker run -it -p 8888:8888 -v /Users/내폴더:/notebooks  tensorflow/tensorflow
+# commit 을 통해 이미지 업데이트
+$ docker commit [container_id] [image_id]:[tag]
 ```
 <br><br>
 
