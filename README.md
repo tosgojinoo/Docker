@@ -8,13 +8,13 @@ $ sudo apt-get remove docker docker-engine docker.io
 
 + 설치에 필요한 패키지 설치
 ```sh
-(입력시 '\' 및 줄바꿈 제외)
+# 입력시 '\' 및 줄바꿈 제외
 sudo apt-get update && sudo apt-get install \
     apt-transport-https \
     ca-certificates \
     curl \
     software-properties-common
-(또는)
+# 또는
 sudo apt-get update 
 sudo apt-get install apt-transport-https 
 sudo apt-get install ca-certificates
@@ -26,12 +26,12 @@ sudo apt-get install software-properties-common
 ` W: GPG 오류: http://nginx.org trusty Release: 다음 서명들은 공개키가 없기 때문에 인증할 수 없습니다: NO_PUBKEY ABF5BD827BD9BF62` 
 
 ```sh
-('-- recv' 뒤에 오류에서 언급된 PUBKEY 값 입력)
+# '-- recv' 뒤에 오류에서 언급된 PUBKEY 값 입력
 $ gpg --keyserver keyserver.ubuntu.com --recv ABF5BD827BD9BF62
 $ gpg --export --armor ABF5BD827BD9BF62 | sudo apt-key add -
-(출력 : OK)
+# 출력 : OK
 
-(다시 업데이트 실행)
+# 다시 업데이트 실행
 $ sudo apt-get update
 ```
 
@@ -57,16 +57,16 @@ $ sudo apt-get update
 
 ## Nvidia Graphics Driver 설치
 ```bash
-(설치된 gpu에 맞는 드라이버 확인)
+# 설치된 gpu에 맞는 드라이버 확인
 $ ubuntu-drivers devices
-(recommended driver 바로 설치)
+# recommended driver 바로 설치
 $ sudo ubuntu-drivers autoinstall
-(또는, ppa 추가 후 설치)
+# 또는, ppa 추가 후 설치
 $ sudo add-apt-repository ppa:graphics-drivers/ppa
 $ sudo apt update
 $ sudo apt install nvidia-415
-(재부팅)
-(설치 확인)
+# 재부팅
+# 설치 확인
 $ nvidia-smi
 ```
 <br><br>
@@ -84,13 +84,12 @@ $ nvidia-smi
 + [ubuntu]
 ```bash
 $ sudo apt-get update && sudo apt-get install docker-ce
-(Docker는 커맨드 실행 시 root 권한이 필요)
-(매번 sudo를 붙이는 대신, root 권한 부여)
-(docker group 생성)
+# Docker는 커맨드 실행 시 root 권한이 필요, 매번 sudo를 붙이는 대신 root 권한 부여
+# docker group 생성
 $ sudo groupadd docker
-(docker group에 사용자 추가)
+# docker group에 사용자 추가
 $ sudo usermod -aG docker {USER}
-(log out and log back in)
+# log out and log back in
 ```
 
 + (참고) Linux 인스톨 과정
@@ -104,20 +103,20 @@ $ sudo usermod -aG docker {USER}
 ## 이미지 실행
 ### 예시
 ```bash
-(포멧)
+# 포멧
 $ docker run [OPTIONS] IMAGE [COMMAND] 
 
-(ubuntu 실행시)
+# ubuntu 실행시
 $ docker run ubuntu:16.04
 
-(pytorch, StepanKuzmin의 pytorch-notebook)
+# pytorch, StepanKuzmin의 pytorch-notebook
 $ docker run -it --rm -p 8888:8888 stepankuzmin/pytorch-notebook
 
-(tensorflow/tensorflow)
+# tensorflow/tensorflow
 $ docker run -it -p 8888:8888 tensorflow/tensorflow [command]
 $ docker run --runtime=nvidia -it -p 8888:8888 tensorflow/tensorflow:latest-gpu
-(Dockerhub의 official tensorflow-gpu 컨테이너 실행 가이드 참고)
-(Dockerhub -> tensorflow/tensorflow -> tags -> latest-gpu-py3 -> Start GPU (CUDA) container)
+# Dockerhub의 official tensorflow-gpu 컨테이너 실행 가이드 참고
+# Dockerhub -> tensorflow/tensorflow -> tags -> latest-gpu-py3 -> Start GPU (CUDA) container
 ```
 
 
@@ -125,7 +124,7 @@ $ docker run --runtime=nvidia -it -p 8888:8888 tensorflow/tensorflow:latest-gpu
 ```bash
 $ docker run -it -p 8888:8888 tensorflow/tensorflow [command]
 ```
-+ option
++ (참고) option
 	+ -i: interactive, keep stdin open
 	+ -t: tty, allocate a terminal
 		+ 위 옵션을 주지 않으면 컨테이너 안에서의 터미널을 볼 수 없음
@@ -136,23 +135,23 @@ $ docker run -it -p 8888:8888 tensorflow/tensorflow [command]
  	+ [COMMAND]가 주어지지 않을 경우 tensorflow 이미지의 디폴트 실행 프로그램은
 Jupyter notebook
 
-+ run 명령어 최초 실행 시
++ (참고) run 명령어 최초 실행 시
 	+ 로컬에서 이미지 찾음
 	+ 로컬에 없을 경우,  tensorflow/tensorflow 이름을 가진 이미지가 dockerhub에 있는지 찾아 로컬로 가져옴
 	+ pull 이후 run 한 것도 동일
 
-+ `tensorflow/tensorflow:latest` 이미지를 컨테이너로 올리면, 컨테이너에서 Jupyter notebook이 컨테이너의 8888번 포트에서 디폴트로 실행
++ (참고) `tensorflow/tensorflow:latest` 이미지를 컨테이너로 올리면, 컨테이너에서 Jupyter notebook이 컨테이너의 8888번 포트에서 디폴트로 실행
 
-+ 현재 터미널의 상태는 컨테이너에 attach 되어 있는 상태
-+ Ctrl + c -> Jupyter 서버 중지 및  자기 할 일을 마친 컨테이너는 바로 정지됨
-+ Ctrl + p, Ctrl + q를 차례대로 입력 -> attach 상태에서 호스트 쉘로 서버를 중지하지 않고 돌아감 (Escape sequence)
-+ 컨테이너의 8888 포트와 로컬의 8888 포트를 이전에 -p 옵션으로 포워딩 해준 상태 -> 로컬 브라우저에서 8888포트로 접속 가능
-+ 콘솔에 보이는 token=[abcdabcd ...] 문자열 복사/붙여넣기
++ (참고) 현재 터미널의 상태는 컨테이너에 attach 되어 있는 상태
++ (참고) Ctrl + c -> Jupyter 서버 중지 및  자기 할 일을 마친 컨테이너는 바로 정지됨
++ (참고) Ctrl + p, Ctrl + q를 차례대로 입력 -> attach 상태에서 호스트 쉘로 서버를 중지하지 않고 돌아감 (Escape sequence)
++ (참고) 컨테이너의 8888 포트와 로컬의 8888 포트를 이전에 -p 옵션으로 포워딩 해준 상태 -> 로컬 브라우저에서 8888포트로 접속 가능
++ (참고) 콘솔에 보이는 token=[abcdabcd ...] 문자열 복사/붙여넣기
 	+ 최초 1회만 확인
 	+ 외부에서 접속하는 ip가 바뀌면 다시 입력
 	+ 비밀번호 설정 가능
-+ 호스트 쉘에서 attach 명령어, 혹은 `exec -it {container name} /bin/bash` 명령어로   컨테이너 쉘에 접속한 뒤, `jupyter notebook list`를 입력하면 다시 볼 수 있음
-+ `docker attach {container name}`
++ (참고) 호스트 쉘에서 attach 명령어, 혹은 `exec -it {container name} /bin/bash` 명령어로   컨테이너 쉘에 접속한 뒤, `jupyter notebook list`를 입력하면 다시 볼 수 있음
++ (참고) `docker attach {container name}`
 	+ 컨테이너 생성 시 실행하고 있던 프로세스의 상태 그대로 접속 (jupyter server를 실행시켰을 때의 콘솔 상태로 attach)
 	+ ctrl-c를 눌러 확인
 <br><br>
@@ -161,32 +160,32 @@ Jupyter notebook
 ## Nvidia-docker2, tensorflow-gpu 이미지 설치할 경우
 + [Nvidia-docker2 설치](https://github.com/NVIDIA/nvidia-docker)
 ```bash
-(nvidia-docker1 설치 되어있을 경우 삭제)
-(확인 필요)
+# nvidia-docker1 설치 되어있을 경우 삭제
+# (확인 필요)
 $ docker volume ls -q -f driver=nvidia-docker | xargs -r -I{} -n1 docker ps -q -a -f volume={} | xargs -r docker rm -f
 $ sudo apt-get purge -y nvidia-docker
 
-(apt-key에 package repository 추가하고 apt-get update)
+# apt-key에 package repository 추가하고 apt-get update
 $ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
 $ curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
-(ubuntu18.04의 경우 `$distribution`에 `ubuntu18.04`입력됨)
-(ubuntu16.04의 경우 `$distribution`자리에 `ubuntu16.04`수동 입력)
+# ubuntu18.04의 경우 `$distribution`에 `ubuntu18.04`입력됨
+# ubuntu16.04의 경우 `$distribution`자리에 `ubuntu16.04`수동 입력
 $ curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
 
-(Nvidia-docker2 설치)
+# Nvidia-docker2 설치
 $ sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
-(시스템 재부팅하여 도커 데몬 재실행)
+# 시스템 재부팅하여 도커 데몬 재실행
 $ sudo systemctl restart docker
 
 
-(아래는 과거 버전)
-(Nvidia-docker2 설치)
+# (아래는 과거 버전)
+# Nvidia-docker2 설치
 $ sudo apt-get install -y nvidia-docker2
 $ sudo pkill -SIGHUP dockerd
-(/아래)
+# (/아래)
 
 
-(설치 확인을 위한 이미지 실행)
+# 설치 확인을 위한 이미지 실행
 #### CUDA Toolkit 9.0 버전의 'nvidia/cuda:9.0-base' 컨테이너 이미지 다운, 'nvidia-smi' 명령어를 컨테이어 안에서 실행
 $ docker run --runtime=nvidia --rm nvidia/cuda:9.0-base nvidia-smi
 ('--runtime=nvidia' 옵션 : Host의 Nvidia 드라이버가 컨테이너에서도 잘 적용될 수 있음을 직업 확인)
@@ -214,7 +213,7 @@ def get_available_gpus():
 	return [x.name for x in device_lib.list_local_devices()]
 
 get_available_gpus()
-(출력) ['/device:GPU:0', '/device:XLA_GPU:0']
+# 출력 ['/device:GPU:0', '/device:XLA_GPU:0']
 ```
 <br><br>
 
@@ -258,9 +257,9 @@ $ sudo systemctl status docker
 	+ `${HOME}/code` : host pash
 	+ `/notebooks ` : Container pash
 ```bash
-(이전)
+# 이전
 $ docker run -it -p 8888:8888 tensorflow/tensorflow [command]
-(적용)
+# 적용
 $ docker run -it -p 8888:8888 -v ${HOME}/code:/notebooks  tensorflow/tensorflow
 ```
 <br><br>
