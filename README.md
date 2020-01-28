@@ -1,23 +1,23 @@
 # Docker
 
 - [Docker](#docker)
-  * [설치 전 (ubuntu)](#------ubuntu-)
-  * [tensorflow-gpu 사용 순서](#tensorflow-gpu------)
-  * [Nvidia Graphics Driver 설치](#nvidia-graphics-driver---)
-  * [Docker CE 설치](#docker-ce---)
-  * [이미지 실행](#------)
-    + [예시](#--)
-    + [tensorflow/tensorflow 이미지](#tensorflow-tensorflow----)
-  * [Nvidia-docker2, tensorflow-gpu 이미지 설치할 경우](#nvidia-docker2--tensorflow-gpu-----------)
-  * [GPU 인식 확인](#gpu------)
-  * [PyTorch의 경우](#pytorch----)
-  * [도커 시스템 확인](#---------)
-  * [공유 디렉토리 설정](#----------)
-    + [(참고) Dockerhub](#-----dockerhub)
-  * [(참고) 컨테이너 안에서 충돌 발생시](#--------------------)
-  * [(참고) 팁](#------)
-  * [(참고) 도커 명령어](#-----------)
-    + [도커 명령어 옵션](#---------)
+  * [설치 전 (ubuntu)](#설치 전 (ubuntu))
+  * [tensorflow-gpu 사용 순서](#tensorflow-gpu 사용 순서)
+  * [Nvidia Graphics Driver 설치](#Nvidia Graphics Driver 설치)
+  * [Docker CE 설치](#Docker CE 설치)
+  * [이미지 실행](#이미지 실행)
+    + [예시](#예시)
+    + [tensorflow/tensorflow 이미지](#tensorflow/tensorflow 이미지)
+  * [Nvidia-docker2, tensorflow-gpu 이미지 설치할 경우](#Nvidia-docker2, tensorflow-gpu 이미지 설치할 경우)
+  * [GPU 인식 확인](#GPU 인식 확인)
+  * [PyTorch의 경우](#PyTorch의 경우)
+  * [도커 시스템 확인](#도커 시스템 확인)
+  * [공유 디렉토리 설정](#공유 디렉토리 설정)
+    + [(참고) Dockerhub](#(참고) Dockerhub)
+  * [(참고) 컨테이너 안에서 충돌 발생시](#(참고) 컨테이너 안에서 충돌 발생시)
+  * [(참고) 팁](#(참고) 팁)
+  * [(참고) 도커 명령어](#(참고) 도커 명령어)
+    + [도커 명령어 옵션](#도커 명령어 옵션)
 
 
 ## 설치 전 (ubuntu)
@@ -142,7 +142,19 @@ $ docker run --runtime=nvidia -it -p 8888:8888 tensorflow/tensorflow:latest-gpu
 
 ### tensorflow/tensorflow 이미지
 ```bash
+# 포멧
 $ docker run -it -p 8888:8888 tensorflow/tensorflow [command]
+
+# 적용
+$ nvidia-docker run -it \
+--gpus all \
+--rm \
+--ipc=host \
+-p 8888:8888 \
+--name deep_jinoo \
+-v /home/{$user}/{$폴더}:/tf/{$폴더} \
+tensorflow/tensorflow:latest-gpu-py3-jupyter
+
 ```
 + (참고) option
 	+ -i: interactive, keep stdin open
@@ -170,10 +182,11 @@ Jupyter notebook
 	+ 최초 1회만 확인
 	+ 외부에서 접속하는 ip가 바뀌면 다시 입력
 	+ 비밀번호 설정 가능
+
 + (참고) 호스트 쉘에서 attach 명령어, 혹은 `exec -it {container name} /bin/bash` 명령어로   컨테이너 쉘에 접속한 뒤, `jupyter notebook list`를 입력하면 다시 볼 수 있음
 + (참고) `docker attach {container name}`
 	+ 컨테이너 생성 시 실행하고 있던 프로세스의 상태 그대로 접속 (jupyter server를 실행시켰을 때의 콘솔 상태로 attach)
-	+ ctrl-c를 눌러 확인
+	+ ctrl+c를 눌러 확인
 <br><br>
 
 
@@ -205,7 +218,8 @@ $ sudo pkill -SIGHUP dockerd
 # (/아래)
 
 
-# 설치 확인을 위한 이미지 실행
+# Nvidia 설치 확인용 컨테이너 실행
+# (자동으로 CUDA 이미지가 다운로드 받아지는데 나중에 지워도 무방함)
 #### CUDA Toolkit 9.0 버전의 'nvidia/cuda:9.0-base' 컨테이너 이미지 다운, 'nvidia-smi' 명령어를 컨테이어 안에서 실행
 $ docker run --runtime=nvidia --rm nvidia/cuda:9.0-base nvidia-smi
 ('--runtime=nvidia' 옵션 : Host의 Nvidia 드라이버가 컨테이너에서도 잘 적용될 수 있음을 직업 확인)
@@ -286,6 +300,11 @@ $ docker run -it -p 8888:8888 -v /Users/내폴더:/notebooks  tensorflow/tenso
 $ docker commit [container_id] [image_id]:[tag]
 ```
 <br><br>
+
+## 컨테이터로의 파일/폴더 복사
+docker cp (이동할 폴더의 절대경로)/. (컨테이너 name):(컨테이너 내 파일들을 받을 폴더의 절대 경로)
+
+
 
 ### (참고) Dockerhub
 + Docker image 보관
