@@ -13,7 +13,7 @@
   * [PyTorch의 경우](#PyTorch의-경우)
   * [도커 시스템 확인](#도커-시스템-확인)
   * [공유 디렉토리 설정](#공유-디렉토리-설정)
-    + [[참고] Dockerhub](#참고-Dockerhub)
+  * [[참고] Dockerhub](#참고-Dockerhub)
   * [[참고] 컨테이너 안에서 충돌 발생시](#참고-컨테이너-안에서-충돌-발생시)
   * [[참고] 팁](#참고-팁)
   * [[참고] 도커 명령어](#참고-도커-명령어)
@@ -146,13 +146,14 @@ $ docker run --runtime=nvidia -it -p 8888:8888 tensorflow/tensorflow:latest-gpu
 $ docker run -it -p 8888:8888 tensorflow/tensorflow [command]
 
 # 적용
-$ nvidia-docker run -it \
---gpus all \
+$ docker run --gpus all \
+--runtime=nvidia \
+-it \
 --rm \
 --ipc=host \
 -p 8888:8888 \
 --name deep_jinoo \
--v /home/{$user}/{$폴더}:/tf/{$폴더} \
+-v /home/jinoo/바탕화면/now/docker:/tf/notebooks \
 tensorflow/tensorflow:latest-gpu-py3-jupyter
 
 ```
@@ -211,31 +212,14 @@ $ sudo apt-get update && sudo apt-get install -y nvidia-container-toolkit
 $ sudo systemctl restart docker
 
 
-# (아래는 과거 버전)
-# Nvidia-docker2 설치
-$ sudo apt-get install -y nvidia-docker2
-$ sudo pkill -SIGHUP dockerd
-# (/아래)
-
-
 # Nvidia 설치 확인용 컨테이너 실행
 # (자동으로 CUDA 이미지가 다운로드 받아지는데 나중에 지워도 무방함)
+# (이전에는 nvidia-docker 명령어 사용하였으나, docker 명령어로 통합됨)
 #### CUDA Toolkit 9.0 버전의 'nvidia/cuda:9.0-base' 컨테이너 이미지 다운, 'nvidia-smi' 명령어를 컨테이어 안에서 실행
 $ docker run --runtime=nvidia --rm nvidia/cuda:9.0-base nvidia-smi
 ('--runtime=nvidia' 옵션 : Host의 Nvidia 드라이버가 컨테이너에서도 잘 적용될 수 있음을 직업 확인)
 #### Test nvidia-smi with the latest official CUDA image
 $ docker run --gpus all nvidia/cuda:9.0-base nvidia-smi
-
-# Start a GPU enabled container on two GPUs
-$ docker run --gpus 2 nvidia/cuda:9.0-base nvidia-smi
-
-# Starting a GPU enabled container on specific GPUs
-$ docker run --gpus '"device=1,2"' nvidia/cuda:9.0-base nvidia-smi
-$ docker run --gpus '"device=UUID-ABCDEF,1"' nvidia/cuda:9.0-base nvidia-smi
-
-# Specifying a capability (graphics, compute, ...) for my container
-# Note this is rarely if ever used this way
-$ docker run --gpus all,capabilities=utility nvidia/cuda:9.0-base nvidia-smi
 ```
 <br><br>
 
@@ -303,10 +287,10 @@ $ docker commit [container_id] [image_id]:[tag]
 
 ## 컨테이터로의 파일/폴더 복사
 docker cp (이동할 폴더의 절대경로)/. (컨테이너 name):(컨테이너 내 파일들을 받을 폴더의 절대 경로)
+<br><br>
 
 
-
-### [참고] Dockerhub
+## [참고] Dockerhub
 + Docker image 보관
 + (Public repository) tensorflow/tensoflow 다운, 활용
 	+ cpu 버전 : tensorflow/tensorflow:latest, (tab)
