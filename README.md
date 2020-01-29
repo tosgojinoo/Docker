@@ -153,7 +153,7 @@ $ docker run --gpus all \
 --ipc=host \
 -p 8888:8888 \
 --name deep_jinoo \
--v /home/jinoo/바탕화면/now/docker:/tf/notebooks \
+-v /home/{$user}/{$폴더}:/tf/notebooks \
 tensorflow/tensorflow:latest-gpu-py3-jupyter
 
 ```
