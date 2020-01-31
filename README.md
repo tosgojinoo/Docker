@@ -76,19 +76,7 @@ $ sudo apt-get update
 
 
 ## Nvidia Graphics Driver 설치
-```bash
-# 설치된 gpu에 맞는 드라이버 확인
-$ ubuntu-drivers devices
-# recommended driver 바로 설치
-$ sudo ubuntu-drivers autoinstall
-# 또는, ppa 추가 후 설치
-$ sudo add-apt-repository ppa:graphics-drivers/ppa # ppa 추가
-$ sudo apt update
-$ sudo apt install nvidia-440 #(버전)
-# 재부팅
-# 설치 확인
-$ nvidia-smi
-```
++ ([Setting] Nvidia & Cuda) 글 참고
 <br><br>
 
 
